@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Timetable Comparison</title>
+  <style>
+    body {
+      background-color: #ffe6f0;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 8px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 4px;
+      background-color: #fff8b3;
+      border: 1px solid #aaa;
+      font-size: 14px;
+    }
+    .common {
+      background-color: #b3ffb3 !important;
+    }
+    .different {
+      background-color: #ff9999 !important;
+    }
+    .free {
+      background-color: #d6b3ff !important;
+    }
+    .header {
+      background-color: #f0a3c0;
+      font-weight: bold;
+    }
+    .note {
+      margin-top: 10px;
+      font-size: 14px;
+      background-color: #fff0f5;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px dashed #999;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #ff99cc;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    button:hover {
+      background-color: #ff66b3;
+    }
+  </style>
+</head>
+<body>
+  <h2>Editable Timetable (Day Order Wise)</h2>
+
+  <table id="timetable">
+    <thead>
+      <tr class="header">
+        <th>Day/Hour</th>
+        <th>08:00 - 08:50</th>
+        <th>08:50 - 09:40</th>
+        <th>09:45 - 10:35</th>
+        <th>10:40 - 11:25</th>
+        <th>11:30 - 12:20</th>
+        <th>12:25 - 01:15</th>
+        <th>01:30 - 02:20</th>
+        <th>02:25 - 03:15</th>
+        <th>03:20 - 04:10</th>
+        <th>04:20 - 05:10</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Create 5 day rows × 2 users -->
+      <!-- Each pair of rows: A and B -->
+      <!-- Each cell is an input box with unique ID -->
+      <script>
+        for (let day = 1; day <= 5; day++) {
+          document.write(`<tr><td>Day ${day} - A</td>`);
+          for (let hour = 1; hour <= 10; hour++) {
+            document.write(`<td><input type="text" id="A-${day}-${hour}"></td>`);
+          }
+          document.write(`</tr><tr><td>Day ${day} - B</td>`);
+          for (let hour = 1; hour <= 10; hour++) {
+            document.write(`<td><input type="text" id="B-${day}-${hour}"></td>`);
+          }
+          document.write(`</tr>`);
+        }
+      </script>
+    </tbody>
+  </table>
+
+  <button onclick="compareTimetables()">Compare</button>
+
+  <div class="note">
+    ✅ <b>Green:</b> Common Class <br/>
+    ❌ <b>Red:</b> Dissimilar Class <br/>
+    ⏸️ <b>Purple:</b> Common Free Period <br/>
+    📒 <b>Yellow Boxes:</b> Editable Input <br/>
+    🩷 <b>Pink:</b> Background for Soft View
+  </div>
+
+  <script>
+    function compareTimetables() {
+      for (let day = 1; day <= 5; day++) {
+        for (let hour = 1; hour <= 10; hour++) {
+          const idA = `A-${day}-${hour}`;
+          const idB = `B-${day}-${hour}`;
+          const cellA = document.getElementById(idA);
+          const cellB = document.getElementById(idB);
+
+          const valA = cellA.value.trim().toLowerCase();
+          const valB = cellB.value.trim().toLowerCase();
+
+          // Reset background first
+          cellA.className = '';
+          cellB.className = '';
+
+          if (!valA && !valB) {
+            // Both blank = common free time
+            cellA.classList.add('free');
+            cellB.classList.add('free');
+          } else if (valA === valB) {
+            // Same value = common class
+            cellA.classList.add('common');
+            cellB.classList.add('common');
+          } else {
+            // Different = dissimilar class
+            cellA.classList.add('different');
+            cellB.classList.add('different');
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
